@@ -143,6 +143,7 @@ class ScheduleBot
     when :clear
       if args[1].to_s.upcase == 'YES'
         schedule.events.clear
+        schedule.save(schedule_data_path)
         event << "Your schedule was cleared!"
       else
         event << "Are you sure you want to **completely** clear your schedule? __This action is irreversible.__\nType `.schedule clear YES` to continue."
