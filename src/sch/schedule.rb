@@ -6,7 +6,7 @@ class Schedule
   attr_accessor :timezone
 
   def initialize(user, *events)
-    #@timezone = "UTC"
+    @timezone = "UTC"
     if Schedule === user
       @user = user.user
       @events = user.events.dup
@@ -31,8 +31,8 @@ class Schedule
       f.puts(
         {
           user: @user,
-          events: @events.collect{|e| e.serialise}
-          #timezone: @timezone
+          events: @events.collect{|e| e.serialise},
+          timezone: @timezone
         }.to_json
       )
     end
@@ -44,18 +44,18 @@ class Schedule
     return false if file.strip.length == 0
     sch_data = JSON.parse(file)
     sch = Schedule.new(sch_data["user"], *sch_data["events"].collect {|e| Event.deserialise(JSON.parse(e))})
-    #sch.timezone = sch_data["timezone"]
+    sch.timezone = sch_data["timezone"]
     return sch
   end
 
   def to_s
     col1 = "**#{Time.now} – #{Time.now}**"
-    "```\nDate #{"\s" * 35} Activity\n\n" + @events.collect{ |e| "#{e.from.strftime("%-d–%-m–%y %H:%M")} – #{e.to.strftime("%-d–%-m–%y %H:%M %Z")}        #{e.activity}" }.join("\n\n") + "\n```"
+    "```\nDate #{"\s" * 35} Activity\n\n" + @events.collect{ |e| "#{e.from.in_time_zone(@timezone).strftime("%-d–%-m–%y %H:%M")} – #{e.to.in_time_zone(@timezone).strftime("%-d–%-m–%y %H:%M %Z")}        #{e.activity}" }.join("\n\n") + "\n```"
   end
 
   def inspect
     col1 = "**#{Time.now} – #{Time.now}**"
-    "```\nDate #{"\s" * 35} Activity            Event ID\n\n" + @events.collect{ |e| "#{e.from.strftime("%-d–%-m–%y %H:%M")} – #{e.to.strftime("%-d–%-m–%y %H:%M %Z")}       #{e.activity}   <#{e.id}>" }.join("\n\n") + "\n```"
+    "```\nDate #{"\s" * 35} Activity            Event ID\n\n" + @events.collect{ |e| "#{e.from.in_time_zone(@timezone).strftime("%-d–%-m–%y %H:%M")} – #{e.to.in_time_zone(@timezone).strftime("%-d–%-m–%y %H:%M %Z")}       #{e.activity}   <#{e.id}>" }.join("\n\n") + "\n```"
   end
 
 end

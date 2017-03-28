@@ -86,7 +86,26 @@ class ScheduleBot
     case keyword
     # **** 'From' keyword handler ****
     when :from
-      return HelpDialogs::schedule_help(event.user.username) if args.length < 7
+      # Error specific messages, instead of just displaying the schedule help
+      if args.length < 7
+        if args[1] == nil
+          event << "`.schedule`: __You forgot to specify the starting date!__"
+        elsif args[2] == nil
+          event << "`.schedule`: __You forgot to specify the starting time!__"
+        elsif args[3] == nil
+          event << "`.schedule`: __You forgot to use the 'to' keyword:__ `.schedule from {starting date} {time} to {finishing date} {time} {activity}`"
+        elsif args[4] == nil
+          event << "`.schedule`: __You forgot to specify the finishing date!__"
+        elsif args[5] == nil
+          event << "`.schedule`: __You forgot to specify the finishing time!__"
+        elsif args[6] == nil
+          event << "`.schedule`: __You forgot to specify the activity!__"
+        else
+          event << HelpDialogs::schedule_help(event.user.username)
+        end
+        return
+      end
+
       # Arguments of the form "from dd/mm/yy hh:mm to dd/mm/yy hh:mm activity"
       begin
         event_args = {from: Time.parse("#{parse_date(args[1])} #{args[2]} #{schedule.timezone}"), to: Time.parse("#{parse_date(args[4])} #{args[5]} #{schedule.timezone}"), activity: args[6..(args.length - 1)].join(' ')}
@@ -123,7 +142,7 @@ class ScheduleBot
     # **** Clear your schedule completely ****
     when :clear
       if args[1].to_s.upcase == 'YES'
-        File.delete(schedule_data_path)
+        schedule.events.clear
         event << "Your schedule was cleared!"
       else
         event << "Are you sure you want to **completely** clear your schedule? __This action is irreversible.__\nType `.schedule clear YES` to continue."
@@ -152,8 +171,9 @@ class ScheduleBot
     # **** Set the user's timezone ****
     when :timezone
       tz = args[1].capitalize
-      if TimeZone::TIMEZONES.keys.include?(tz)
-        schedule.timezone = TimeZone::TIMEZONES[tz]
+      timezone = Schedule::Event.get_timezone(tz)
+      if timezone
+        schedule.timezone = timezone
         schedule.save(schedule_data_path)
         event << "Your schedule will now be displayed in the #{schedule.timezone} timezone."
       else
