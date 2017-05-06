@@ -1,5 +1,5 @@
 require 'securerandom'
-require_relative 'week.rb'
+require_relative 'week'
 
 class Schedule
 
@@ -18,7 +18,6 @@ class Schedule
     end
 
     def on?(timezone="UTC")
-      puts timezone
       from = @from.in_time_zone(timezone)
       to = @to.in_time_zone(timezone)
       now = Week.now.in_time_zone(timezone)

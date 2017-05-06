@@ -186,7 +186,7 @@ class Schedule
           throw :unable_to_parse, :err
         end
 
-        if TIMEZONE_ABBREVIATION_NAMES.include?(args[2])
+        if TIMEZONE_ABBREVIATION_NAMES.include?(args[2]) || TimeZone::TIMEZONES.values.include?(args[2])
           tz = args[2]
         else
           throw :unable_to_parse, :err

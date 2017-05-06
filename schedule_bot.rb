@@ -26,19 +26,16 @@ class ScheduleBot
   def setup
     @bot.command(:info, description: "**Display help & info about ScheduleBot.**") do |event|
       @channel = event.channel
-      puts @channel
       HelpDialogs::help_dialog
     end
 
    @bot.command(:schedule, description: ":calendar: Set your schedule for others to see.", usage: "`.schedule` **[DAY TIME \"message\" | from DD/MM/YY hh:mm to DD/MM/YY hh:mm {activity} | {preset}]**") do |event, *args|
      @channel = event.channel
-     puts @channel
      ScheduleBot::cmd_schedule(event, *args)
    end
 
    @bot.command(:where, description: ":mag_right: Find out where another use is.", usage: "`.where` username") do |event, username|
      @channel = event.channel
-     puts @channel
      ScheduleBot::cmd_where(event, username)
    end
   end
@@ -155,17 +152,24 @@ class ScheduleBot
           event << HelpDialogs::scheule_help(event.user.username)
         end
       else
-        sday = Schedule::Week::NUMERIC[Schedule::Week::ABBREV_TO_COMPLETE[args[1].upcase]]
-        fday = Schedule::Week::NUMERIC[Schedule::Week::ABBREV_TO_COMPLETE[args[4].upcase]]
-        puts st = args[2].split(':').collect(&:to_i)
-        puts ft = args[5].split(':').collect(&:to_i)
+
+        sday = args[1].length == 3 ? Schedule::Week::ABBREV_TO_COMPLETE[args[1].upcase] : args[1].capitalize
+        fday = args[4].length == 3 ? Schedule::Week::ABBREV_TO_COMPLETE[args[4].upcase] : args[4].capitalize
+        st = args[2].split(':').collect(&:to_i)
+        ft = args[5].split(':').collect(&:to_i)
 
         if sday == nil || fday == nil
           event << ":poop: Invalid day!"
         elsif st == nil || ft == nil
           event << ":poop: Invalid time!"
         else
-          weekly_event = Schedule::WeeklyEvent.new(Schedule::Week.new(sday, *st), Schedule::Week.new(fday, *ft), args[6])
+          begin
+            weekly_event = Schedule::WeeklyEvent.new(Schedule::Week.parse("#{args[1]} #{args[2]} #{schedule.timezone}"), Schedule::Week.parse("#{args[4]} #{args[5]} #{schedule.timezone}"), args[6])
+          rescue ArgumentError => e
+            puts "ArgumentError:".red + " #{e.message}\n" + "BACKTRACE:".yellow + "\n#{e.backtrace.join("\n")}\n\n"
+            return HelpDialogs::schedule_help(event.user.username)
+          end
+          # weekly_event = Schedule::WeeklyEvent.new(Schedule::Week.new(sday, *st), Schedule::Week.new(fday, *ft), args[6])
 
           schedule.add_event(weekly_event)
           schedule.write(schedule_data_path)
