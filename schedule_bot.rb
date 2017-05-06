@@ -8,6 +8,10 @@ Dir[Dir.pwd + "/src/sch/*"].each do |file|
   require file
 end
 
+Dir[Dir.pwd + "/src/comm/*"].each do |file|
+  require file
+end
+
 class ScheduleBot
   include Discordrb
 
@@ -16,21 +20,33 @@ class ScheduleBot
 
   def initialize
     @bot = Commands::CommandBot.new(token: TOKEN, client_id: CLIENT_ID, prefix: '.', command_doesnt_exist_message: HelpDialogs::help_dialog)
+    @channel = nil
   end
 
-   def setup
-     @bot.command(:info, description: "**Display help & info about ScheduleBot.**") do |event|
-       HelpDialogs::help_dialog
-     end
+  def setup
+    @bot.command(:info, description: "**Display help & info about ScheduleBot.**") do |event|
+      @channel = event.channel
+      puts @channel
+      HelpDialogs::help_dialog
+    end
 
-     @bot.command(:schedule, description: "Set your schedule for others to see.", usage: "`.schedule` **[DAY TIME \"message\" | from DD/MM/YY hh:mm to DD/MM/YY hh:mm {activity} | {preset}]**") do |event, *args|
-       ScheduleBot::cmd_schedule(event, *args)
-     end
-
-     @bot.command(:where, description: "Find out where another use is.", usage: "`.where` username") do |event, username|
-       ScheduleBot::cmd_where(event, username)
-     end
+   @bot.command(:schedule, description: ":calendar: Set your schedule for others to see.", usage: "`.schedule` **[DAY TIME \"message\" | from DD/MM/YY hh:mm to DD/MM/YY hh:mm {activity} | {preset}]**") do |event, *args|
+     @channel = event.channel
+     puts @channel
+     ScheduleBot::cmd_schedule(event, *args)
    end
+
+   @bot.command(:where, description: ":mag_right: Find out where another use is.", usage: "`.where` username") do |event, username|
+     @channel = event.channel
+     puts @channel
+     ScheduleBot::cmd_where(event, username)
+   end
+  end
+
+  def log_exception(e)
+    @bot.send_message(@channel, "```ruby\n#{e}\n```")
+    super
+  end
 
   def start
     begin
@@ -53,7 +69,7 @@ class ScheduleBot
       if events.none?{|e| e.on?(tz) }
         output_string = "#{username} doesn't have anything scheduled right now."
         if queried_user.game
-          output_string << " They are playing #{queried_user.game}."
+          output_string << ":video_game: They are playing #{queried_user.game}"
         else
           output_string << " They are currently #{queried_user.status}."
         end
@@ -67,7 +83,7 @@ class ScheduleBot
 
       end
     else
-      event << "#{username} is not on this server. `where` uses the distinct user ID, e.g. User#1234."
+      event << ":scream: #{username} is not on this server. `where` uses the distinct user ID, e.g. User#1234."
     end
 
     return nil
@@ -89,17 +105,17 @@ class ScheduleBot
       # Error specific messages, instead of just displaying the schedule help
       if args.length < 7
         if args[1] == nil
-          event << "`.schedule`: __You forgot to specify the starting date!__"
+          event << ":poop: `.schedule`: __You forgot to specify the starting date!__"
         elsif args[2] == nil
-          event << "`.schedule`: __You forgot to specify the starting time!__"
-        elsif args[3] == nil
-          event << "`.schedule`: __You forgot to use the 'to' keyword:__ `.schedule from {starting date} {time} to {finishing date} {time} {activity}`"
+          event << ":poop: `.schedule`: __You forgot to specify the starting time!__"
+        elsif args[3] != 'to'
+          event << ":poop: `.schedule`: __You forgot to use the 'to' keyword:__ `.schedule from {starting date} {time} to {finishing date} {time} {activity}`"
         elsif args[4] == nil
-          event << "`.schedule`: __You forgot to specify the finishing date!__"
+          event << ":poop: `.schedule`: __You forgot to specify the finishing date!__"
         elsif args[5] == nil
-          event << "`.schedule`: __You forgot to specify the finishing time!__"
+          event << ":poop: `.schedule`: __You forgot to specify the finishing time!__"
         elsif args[6] == nil
-          event << "`.schedule`: __You forgot to specify the activity!__"
+          event << ":poop: `.schedule`: __You forgot to specify the activity!__"
         else
           event << HelpDialogs::schedule_help(event.user.username)
         end
@@ -116,12 +132,47 @@ class ScheduleBot
 
       sch_event = Schedule::Event.new(event_args[:from], event_args[:to], event_args[:activity])
       schedule.add_event(sch_event)
-      schedule.save(schedule_data_path)
+      schedule.write(schedule_data_path)
 
       event << "Your schedule has been set!\n" + sch_event.print_tz(schedule.timezone)
 
     # **** 'Weekly' keyword handler ****
     when :weekly
+      if args.length < 7
+        if args[1] == nil
+          event << ":poop: `.schedule`: __You forgot to specify the starting day!__"
+        elsif args[2] == nil
+          event << ":poop: `.schedule`: __You forgot to specify the starting time!__"
+        elsif args[3] != 'to'
+          event << ":poop: `.schedule`: __You forgot to use the 'to' keyword:__ `.schedule #{keyword.upcase} DAY {starting time} to DAY {finishing time} {activity}`"
+        elsif args[4] == nil
+          event << ":poop: `.schedule`: __You forgot to specify the finishing day!__"
+        elsif args[5] == nil
+          event << ":poop: `.schedule`: __You forgot to specify the finishing time!__"
+        elsif args[6] == nil
+          event << ":poop: `.schedule`: __You forgot to specify the activity!__"
+        else
+          event << HelpDialogs::scheule_help(event.user.username)
+        end
+      else
+        sday = Schedule::Week::NUMERIC[Schedule::Week::ABBREV_TO_COMPLETE[args[1].upcase]]
+        fday = Schedule::Week::NUMERIC[Schedule::Week::ABBREV_TO_COMPLETE[args[4].upcase]]
+        puts st = args[2].split(':').collect(&:to_i)
+        puts ft = args[5].split(':').collect(&:to_i)
+
+        if sday == nil || fday == nil
+          event << ":poop: Invalid day!"
+        elsif st == nil || ft == nil
+          event << ":poop: Invalid time!"
+        else
+          weekly_event = Schedule::WeeklyEvent.new(Schedule::Week.new(sday, *st), Schedule::Week.new(fday, *ft), args[6])
+
+          schedule.add_event(weekly_event)
+          schedule.write(schedule_data_path)
+
+          event << ":calendar: Your schedule has been set! Added a new weekly event:\n" + weekly_event.print_tz(schedule.timezone)
+        end
+      end
 
     # **** 'Status' keyword handler
     when :status
@@ -143,8 +194,8 @@ class ScheduleBot
     when :clear
       if args[1].to_s.upcase == 'YES'
         schedule.events.clear
-        schedule.save(schedule_data_path)
-        event << "Your schedule was cleared!"
+        schedule.write(schedule_data_path)
+        event << ":fire: Your schedule was cleared!"
       else
         event << "Are you sure you want to **completely** clear your schedule? __This action is irreversible.__\nType `.schedule clear YES` to continue."
       end
@@ -153,30 +204,35 @@ class ScheduleBot
     when :remove
       id = args[1]
       if id.to_s.length != 32
-        event << 'Invalid event ID!'
+        event << ':poop: Invalid event ID!'
       else
-        event_ids = schedule.events.sort.collect(&:id)
+        event_ids = schedule.events.sort_by { |e| e.from.to_i }.collect(&:id)
         if event_ids.include?(id)
           if args[2].to_s.upcase == 'YES'
             schedule.remove_event(id)
-            schedule.save(schedule_data_path)
-            event << "The event with id #{id} was removed."
+            schedule.write(schedule_data_path)
+            event << ":fire: The event with ID __#{id}__ was removed."
           else
-            event << "Are you sure you want to remove this event? __This action is irreversible.__\nType `.schedule remove #{id} YES` to continue"
+            event << "Are you sure you want to remove this event? __This action is irreversible.__\nType `.schedule remove __#{id}__ YES` to continue"
           end
         else
-          event << 'There is no event corresponding to that ID!'
+          event << ':poop: There is no event corresponding to that ID!'
         end
       end
 
     # **** Set the user's timezone ****
     when :timezone
-      tz = args[1].capitalize
+      tz = args[1].to_s.capitalize
+      if tz == ''
+        event << "#{Emote::clock_now(schedule.timezone)} Your timezone is currently set to #{schedule.timezone}."
+        return
+      end
+
       timezone = Schedule::Event.get_timezone(tz)
       if timezone
         schedule.timezone = timezone
-        schedule.save(schedule_data_path)
-        event << "Your schedule will now be displayed in the #{schedule.timezone} timezone."
+        schedule.write(schedule_data_path)
+        event << "#{Emote::get_flag(timezone)} Your schedule will now be displayed in the #{schedule.timezone} timezone."
       else
         event << "Cannot find a timezone for that city!"
       end

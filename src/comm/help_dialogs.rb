@@ -12,7 +12,7 @@ module HelpDialogs
     `.schedule from dd/mm/yy hh:mm to dd/mm/yy hh:mm event`
 
     __Set a weekly event__
-    `.schedule DAY hh:mm to hh:mm`
+    `.schedule weekly DAY hh:mm to DAY hh:mm event`
 
     __Set your status temporarily__
     `.schedule status {status} ON|OFF` (`.statuses` for a list of statuses)

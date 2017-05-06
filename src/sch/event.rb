@@ -22,7 +22,7 @@ class Schedule
     end
 
     def on?(timezone="UTC")
-      Time.now.in_time_zone(timezone) > @from && Time.now.in_time_zone(timezone) < @to ? true : false
+      Time.now.in_time_zone(timezone) >= @from && Time.now.in_time_zone(timezone) <= @to ? true : false
     end
 
     def to_s
@@ -41,15 +41,16 @@ class Schedule
     def serialise
       return {
         @id.to_sym => {
+          type: "Event",
           from: @from,
           to: @to,
           activity: @activity
         }
-      }.to_json
+      }
     end
 
     def self.deserialise(data)
-      json = data[data.keys[0]]
+      json = data.values.first
       return Event.new(Time.parse(json["from"]), Time.parse(json["to"]), json["activity"], data.keys[0])
     end
 
