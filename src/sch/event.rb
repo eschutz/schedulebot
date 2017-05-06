@@ -6,7 +6,6 @@ require 'active_support/core_ext/time'
 
 class Schedule
 
-
   class Event
     include Comparable
 

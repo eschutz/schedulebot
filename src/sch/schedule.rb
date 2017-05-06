@@ -1,4 +1,5 @@
 require_relative 'event'
+require_relative 'weekly_event'
 
 class Schedule
 
