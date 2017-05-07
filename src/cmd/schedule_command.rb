@@ -81,8 +81,8 @@ class ScheduleCommand
         end
       else
 
-        sday = args[1].length == 3 ? Schedule::Week::ABBREV_TO_COMPLETE[args[1].upcase] : args[1].capitalize
-        fday = args[4].length == 3 ? Schedule::Week::ABBREV_TO_COMPLETE[args[4].upcase] : args[4].capitalize
+        sday = args[1].length == 3 ? Schedule::WeekTime::ABBREV_TO_COMPLETE[args[1].upcase] : args[1].capitalize
+        fday = args[4].length == 3 ? Schedule::WeekTime::ABBREV_TO_COMPLETE[args[4].upcase] : args[4].capitalize
         st = args[2].split(':').collect(&:to_i)
         ft = args[5].split(':').collect(&:to_i)
 
@@ -92,12 +92,12 @@ class ScheduleCommand
           event << ":poop: Invalid time!"
         else
           begin
-            weekly_event = Schedule::WeeklyEvent.new(Schedule::Week.parse("#{args[1]} #{args[2]} #{schedule.timezone}"), Schedule::Week.parse("#{args[4]} #{args[5]} #{schedule.timezone}"), args[6])
+            weekly_event = Schedule::WeeklyEvent.new(Schedule::WeekTime.parse("#{args[1]} #{args[2]} #{schedule.timezone}"), Schedule::WeekTime.parse("#{args[4]} #{args[5]} #{schedule.timezone}"), args[6])
           rescue ArgumentError => e
             puts "ArgumentError:".red + " #{e.message}\n" + "BACKTRACE:".yellow + "\n#{e.backtrace.join("\n")}\n\n"
             return personal_help(event.user.username)
           end
-          # weekly_event = Schedule::WeeklyEvent.new(Schedule::Week.new(sday, *st), Schedule::Week.new(fday, *ft), args[6])
+          # weekly_event = Schedule::WeeklyEvent.new(Schedule::WeekTime.new(sday, *st), Schedule::WeekTime.new(fday, *ft), args[6])
 
           schedule.add_event(weekly_event)
           schedule.write(schedule_data_path)

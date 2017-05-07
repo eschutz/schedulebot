@@ -9,8 +9,12 @@ class Schedule
   class Preset
     def add_to_schedule(schedule)
       # Check that a schedule has been passed
-      raise ArgumentError, "#{schedule.class} cannot be coerced into type Schedule" if !(Schedule === schedule)
-      
+      raise ArgumentError, "#{schedule.class} cannot be coerced into type Schedule" unless Schedule === schedule
+
+      @events.each do |event|
+        schedule.add_event(event.to_weekly_event(schedule.timezone, @activity))
+      end
+
       return Schedule.new(user, *@events)
     end
   end
@@ -82,7 +86,7 @@ class Schedule
   def format_event(event)
     if Time === event
       return event.strftime("%-d–%-m–%y %H:%M")
-    elsif Week === event
+    elsif WeekTime === event
       return event.to_s
     end
   end

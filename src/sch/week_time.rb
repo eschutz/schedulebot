@@ -3,11 +3,11 @@ require_relative 'timezone'
 
 class Schedule
 
-  class Week
+  class WeekTime
     include Comparable
 
     # Although these values are obvious, naming them is useful for metaprogramming
-    # See Week#to_i
+    # See WeekTime#to_i
     SECONDS_IN_DAY = 24 * 60 * 60
     SECONDS_IN_HOUR = 60 * 60
     SECONDS_IN_MINUTE = 60
@@ -31,7 +31,7 @@ class Schedule
                 }
     NUMERIC = READABLE.invert
 
-    DAY_ABBREVIATIONS = Week::READABLE.values.collect(&:upcase) + ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+    DAY_ABBREVIATIONS = WeekTime::READABLE.values.collect(&:upcase) + ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
     ABBREV_TO_COMPLETE = { "SUN" => "Sunday",
                            "MON" => "Monday",
@@ -65,7 +65,7 @@ class Schedule
         @second = time.sec
         @timezone = time.zone
       else
-        raise ArgumentError, "Not enough arguments for Week object."
+        raise ArgumentError, "Not enough arguments for WeekTime object."
       end
     end
 
@@ -113,7 +113,7 @@ class Schedule
         offset = tz_offset
       end
 
-      return Week.new(day, hour, minute, second, offset.to_s)
+      return WeekTime.new(day, hour, minute, second, offset.to_s)
     end
 
     def to_i
@@ -197,7 +197,7 @@ class Schedule
       end
 
       unless parse_result == :err
-        return Week.new(parse_result[0], *parse_result[1], parse_result[2])
+        return WeekTime.new(parse_result[0], *parse_result[1], parse_result[2])
       else
         raise ArgumentError, "invalid time format: unable to parse"
       end
@@ -245,6 +245,6 @@ end
 
 class Time
   def week
-    return Schedule::Week.new(wday, hour, min, sec, zone)
+    return Schedule::WeekTime.new(wday, hour, min, sec, zone)
   end
 end

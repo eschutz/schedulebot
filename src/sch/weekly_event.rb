@@ -1,5 +1,5 @@
 require 'securerandom'
-require_relative 'week'
+require_relative 'week_time'
 
 class Schedule
 
@@ -10,7 +10,7 @@ class Schedule
     attr_accessor :where_string
 
     def initialize(from, to, activity, id=nil)
-      raise ArgumentError, "#{from.class} or #{to.class} can't be coerced into Week object" if !(Week === from) || !(Week === to)
+      raise ArgumentError, "#{from.class} or #{to.class} can't be coerced into WeekTime object" if !(WeekTime === from) || !(WeekTime === to)
       @from = from.in_time_zone("UTC")
       @to = to.in_time_zone("UTC")
       @activity = activity
@@ -20,7 +20,7 @@ class Schedule
     def on?(timezone="UTC")
       from = @from.in_time_zone(timezone)
       to = @to.in_time_zone(timezone)
-      now = Week.now.in_time_zone(timezone)
+      now = WeekTime.now.in_time_zone(timezone)
       # Check to see if it crosses the week boundary (Saturday (6th day of the week) - Sunday (0th day of the week))
       if from > to
         if now >= from || now <= to
@@ -58,7 +58,7 @@ class Schedule
 
     def self.deserialise(data)
       json = data.values.first
-      return WeeklyEvent.new(Week.parse(json["from"]), Week.parse(json["to"]), json["activity"], data.keys[0])
+      return WeeklyEvent.new(WeekTime.parse(json["from"]), WeekTime.parse(json["to"]), json["activity"], data.keys[0])
     end
 
   end
