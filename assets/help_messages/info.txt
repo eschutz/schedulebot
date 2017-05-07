@@ -1,6 +1,6 @@
 :calendar: **ScheduleBot:** A simple bot to let others know where you are and when you are busy.
 
-__Execute each command without arguments to display in-depth help.__
+__Execute each command by itself to display in-depth help.__
 
 Commands:
 

@@ -1,7 +1,19 @@
 require_relative 'event'
 require_relative 'weekly_event'
+require_relative 'preset'
 
 class Schedule
+
+  # Monkey patch Preset class within schedule.rb as it would require a recursive dependency
+  # (preset.rb: require_relative 'schedule', schedule.rb: require_relative 'preset')
+  class Preset
+    def add_to_schedule(schedule)
+      # Check that a schedule has been passed
+      raise ArgumentError, "#{schedule.class} cannot be coerced into type Schedule" if !(Schedule === schedule)
+      
+      return Schedule.new(user, *@events)
+    end
+  end
 
   attr_reader :user, :events
   attr_accessor :timezone

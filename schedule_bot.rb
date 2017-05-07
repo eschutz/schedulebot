@@ -26,7 +26,8 @@ class ScheduleBot
   end
 
   def log_exception(e)
-    @bot.send_message(@channel, "```ruby\n#{e}\n```")
+    puts "In log_exception!"
+    @bot.send_message(@channel, "```ruby\n#{e.class.name}: #{e.message}\n```")
     super
   end
 
