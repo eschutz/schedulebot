@@ -1,10 +1,11 @@
 require_relative 'sch/schedule'
+require_relative 'path_helper'
 
 # ScheduleHelper contains methods that assist in loading and manipulating schedules
 module ScheduleHelper
 
   def get_schedule(user_distinct)
-    schedule_data_path = "./data/user/where/#{user_distinct}"
+    schedule_data_path = PathHelper::get_data_path("user/where/#{user_distinct}")
     if File.exists?(schedule_data_path)
       schedule = Schedule.load_schedule(schedule_data_path)
       if schedule == false
@@ -28,6 +29,16 @@ module ScheduleHelper
     end
 
     return parsed_date
+  end
+
+  def parse_time(time)
+    parsed_time = time
+    case parsed_time
+    when "now"
+      parsed_time = Time.now.strftime("%H:%M")
+    end
+
+    return parsed_time
   end
 
 end

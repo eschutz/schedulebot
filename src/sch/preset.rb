@@ -1,15 +1,22 @@
 require 'json'
 require_relative 'weekly_event'
+require_relative '../path_helper'
 
 class Schedule
 
   class Preset
 
-    attr_reader :name, :activity, :events
+    @@presets = Dir[File.join(PathHelper::SCHEDULE_BOT_DIR, 'assets/presets/*')].collect do |file|
+      preset = JSON.parse(File.read(file))
+      { name: preset['name'], description: preset['description'] }
+    end
 
-    def initialize(name, activity, *events)
-      @name = name
-      @activity = activity
+    attr_reader :name, :activity, :events, :description
+
+    def initialize(name, activity, description, *events)
+      @name = name.to_sym
+      @activity = activity.to_s
+      @description = description
       raise ArgumentError, 'array of events contains an object(s) that is not of type AbstractWeeklyEvent' unless events.all? {|e| AbstractWeeklyEvent === e }
       @events = events
     end
@@ -27,15 +34,27 @@ class Schedule
       end
     end
 
-    def self.load(path)
+    def self.load_preset(path)
       data = JSON.parse(File.read(path))
-      loaded_preset = Preset.new(data['name'], data['activity'])
+      loaded_preset = Preset.new(data['name'], data['activity'], data['description'])
       data['events'].each do |event|
         loaded_preset.add_event(AbstractWeeklyEvent.new(new_abstract_week_time(*event['from'].split), new_abstract_week_time(*event['to'].split)))
       end
 
       return loaded_preset
 
+    end
+
+    def self.presets
+      @@presets
+    end
+
+    def self.get_preset(preset)
+      if @@presets.collect{ |pre| pre[:name].downcase.to_sym }.include?(preset.downcase.to_sym)
+        return load_preset(File.join(PathHelper::SCHEDULE_BOT_DIR, "assets/presets/#{preset.capitalize}.txt"))
+      else
+        raise ArgumentError, "invalid preset name: #{preset}"
+      end
     end
 
     # Event that stores just the times, without timezone and optional activity

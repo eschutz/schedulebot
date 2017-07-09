@@ -5,7 +5,7 @@ require 'time'
 require 'colorize'
 
 Dir[Dir.pwd + '/src/cmd/*'].each do |file|
-  require file
+  require file unless file.include?('events_command')
 end
 
 class ScheduleBot
@@ -15,7 +15,7 @@ class ScheduleBot
   CLIENT_ID = "294809301040496641".freeze
 
   def initialize
-    @bot = Commands::CommandBot.new(token: TOKEN, client_id: CLIENT_ID, prefix: '.', command_doesnt_exist_message: File.read('assets/help_messages/info.txt'))
+    @bot = Commands::CommandBot.new(token: TOKEN, client_id: CLIENT_ID, prefix: '&', command_doesnt_exist_message: File.read('assets/help_messages/info.txt'))
     @channel = nil
   end
 
@@ -23,6 +23,7 @@ class ScheduleBot
     add_command(InfoCommand)
     add_command(ScheduleCommand)
     add_command(WhereCommand)
+    add_command(PresetsCommand)
   end
 
   def log_exception(e)
@@ -33,7 +34,9 @@ class ScheduleBot
 
   def start
     begin
-      @bot.run
+      @bot.run(:async)
+      @bot.game = '&info'
+      @bot.sync
     rescue Interrupt
       @bot.stop
     end

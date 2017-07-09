@@ -9,7 +9,7 @@ class WhereCommand
   HELP_MSG = File.read('assets/help_messages/where_help.txt')
   OPTIONS = {
     description: ':mag_right: Find out where another use is.',
-    usage: '`.where` username#1234'
+    usage: '`&where` username#1234'
   }
 
   def self.call(event, *args)
@@ -25,9 +25,9 @@ class WhereCommand
       if events.none?{|e| e.on?(tz) }
         output_string = "#{username} doesn't have anything scheduled right now."
         if queried_user.game
-          output_string << ":video_game: They are playing #{queried_user.game}"
+          output_string << "\n:video_game: They are playing #{queried_user.game}"
         else
-          output_string << " They are currently #{queried_user.status}."
+          output_string << "\nThey are currently #{queried_user.status}."
         end
         event << output_string
       else

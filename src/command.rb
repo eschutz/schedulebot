@@ -3,6 +3,9 @@
 # Did some sick metaprogramming to get around Ruby's class variable inheritance
 module Command
 
+  CMD_NAME = nil
+  HELP_MSG = nil
+
   OPTIONS = [
     :permission_level,
     :permission_message,

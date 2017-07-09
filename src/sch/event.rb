@@ -9,6 +9,11 @@ class Schedule
   class Event
     include Comparable
 
+    MAX_ACTIVITY_LENGTH = 100
+    MAX_TIME_LENGTH = 60
+    MARKDOWN_LENGTH = 12
+    MAX_STRING_LENGTH = MAX_ACTIVITY_LENGTH + MAX_TIME_LENGTH + MARKDOWN_LENGTH
+
     attr_reader :from, :to, :activity, :id
     attr_accessor :where_string
 
@@ -17,7 +22,8 @@ class Schedule
       @from = from.getutc
       @to = to.getutc
       @activity = activity
-      @id = id || SecureRandom.hex
+      raise ArgumentError, "activity length exceeds max length of #{MAX_ACTIVITY_LENGTH}" if @activity.length > MAX_ACTIVITY_LENGTH
+      @id = id || SecureRandom.hex[0..5] # ID is first five characters of generate hash
     end
 
     def on?(timezone="UTC")
@@ -29,7 +35,7 @@ class Schedule
     end
 
     def print_tz(timezone)
-      "**#{@activity.capitalize}** from __#{@from.in_time_zone(timezone)}__ to __#{@to.in_time_zone(timezone)}__"
+      "**#{@activity.capitalize}** from __#{@from.in_time_zone(timezone).to_s.gsub(/:\d\d [+-]\d{4}/, '')}__ to __#{@to.in_time_zone(timezone).to_s.gsub(/:\d\d [+-]\d{4}/, '')}__"
     end
 
     def <=>(obj)
@@ -58,6 +64,5 @@ class Schedule
     end
 
   end
-
 
 end

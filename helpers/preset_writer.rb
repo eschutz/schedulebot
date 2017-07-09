@@ -7,6 +7,8 @@ begin
   puts '* Preset Creator *'.bold.blue
   print 'Activity name: '
   name = gets.chomp
+  print 'Description: '
+  description = gets.chomp
   print 'Activity: '
   activity = gets.chomp
   print 'Daily Starting Time (24 Hour Time, hh:mm): '
@@ -16,7 +18,7 @@ begin
   print 'Weekends? (y/n): '
   weekends = gets.chomp.upcase == 'Y' ? true : false
 
-  new_preset = Schedule::Preset.new(name, activity)
+  new_preset = Schedule::Preset.new(name, activity, description)
 
   Schedule::WeekTime::READABLE.values.each do |day|
       next if !weekends && (day == 'Saturday' || day == 'Sunday')

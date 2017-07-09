@@ -1,3 +1,3 @@
 **__ScheduleBot__:** **.where** Find out what another user is up to.
-**Usage:** `.where {username#1234}`
-__`.where` uses someone's **distinct user ID**. This means that if their name is *username*, then their distinct ID will be *username#1234*. You can find a user's distinct ID by clicking on their name, or by mentioning the user and deleting the '*@*' character.__
+**Usage:** `&where {username#1234}`
+__`&where` uses someone's **distinct user ID**. This means that if their name is *username*, then their distinct ID will be *username#1234*. You can find a user's distinct ID by clicking on their name, or by mentioning the user and deleting the '*@*' character.__

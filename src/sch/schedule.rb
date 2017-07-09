@@ -1,35 +1,25 @@
 require_relative 'event'
 require_relative 'weekly_event'
 require_relative 'preset'
+require_relative '../comm/emote'
+require_relative '../schedule_formatter'
+
 
 class Schedule
 
-  # Monkey patch Preset class within schedule.rb as it would require a recursive dependency
-  # (preset.rb: require_relative 'schedule', schedule.rb: require_relative 'preset')
-  class Preset
-    def add_to_schedule(schedule)
-      # Check that a schedule has been passed
-      raise ArgumentError, "#{schedule.class} cannot be coerced into type Schedule" unless Schedule === schedule
-
-      @events.each do |event|
-        schedule.add_event(event.to_weekly_event(schedule.timezone, @activity))
-      end
-
-      return Schedule.new(user, *@events)
-    end
-  end
-
-  attr_reader :user, :events
+  attr_reader :user, :events, :enabled_presets
   attr_accessor :timezone
 
   def initialize(user, *events)
     @timezone = "UTC"
+    @enabled_presets = Array.new
+    @en_presets_set = false
     if Schedule === user
       @user = user.user
       @events = user.events.dup
     else
       @user = user
-      raise ArgumentError, 'Schedule constructor takes only Event objects' if !(events.all? {|e| Event === e || WeeklyEvent === e})
+      raise ArgumentError, 'Schedule constructor takes only Event objects' if !(events.all? {|e| Event === e || WeeklyEvent === e} )
       @events = events.clone.sort {|e1, e2| e1.from.to_i <=> e2.from.to_i }
     end
   end
@@ -38,8 +28,37 @@ class Schedule
     @events << event
   end
 
+  def add_preset(preset)
+    raise ArgumentError, "#{preset.class} cannot be coerced into type Preset" unless Preset === preset
+
+    preset.events.each do |event|
+      add_event(event.to_weekly_event(@timezone, preset.activity))
+    end
+
+    @enabled_presets << preset.name.to_sym
+  end
+
+  def remove_preset(preset)
+    raise ArgumentError, "#{preset.class} cannot be coerced into type Preset" unless Preset === preset
+
+    @events.select {|e| e.activity == preset.activity }.each do |preset_event|
+      remove_event(preset_event.id)
+    end
+    @enabled_presets.delete(preset.name)
+
+  end
+
   def remove_event(id)
     @events.delete_if {|e| e.id == id}
+  end
+
+  # For deserialisation
+  def set_enabled_presets(en_presets)
+    raise ArgumentError, "#{en_presets.class} cannot be coerced into type Array" if !(Array === en_presets)
+    raise ArgumentError, "invalid array contents: enabled presets can only contain Symbols or Strings" if !(en_presets.all? {|ep| Symbol === ep || String === ep })
+
+    @enabled_presets = en_presets.collect(&:to_sym)
+    @en_presets_set = true
   end
 
   # Save a schedule to file
@@ -49,7 +68,8 @@ class Schedule
         {
           user: @user,
           events: @events.collect{|e| e.serialise},
-          timezone: @timezone
+          timezone: @timezone,
+          enabled_presets: @enabled_presets
         }.to_json
       )
     end
@@ -68,27 +88,18 @@ class Schedule
 
     sch = Schedule.new(sch_data["user"], *events)
     sch.timezone = sch_data["timezone"]
+    sch.set_enabled_presets(sch_data["enabled_presets"])
     return sch
   end
 
   def to_s
-    col1 = "**#{Time.now} – #{Time.now}**"
-    "```\nDate #{"\s" * 35} Activity\n\n" + @events.collect {|e|"#{format_event(e.from.in_time_zone(@timezone))} – #{format_event(e.to.in_time_zone(@timezone))}        #{e.activity}" }.join("\n\n") + "\n\n\n(All times are displayed in #{@timezone} time.)\n```"
+    ScheduleFormatter.new(self).format_table
   end
 
-  def inspect
-    col1 = "**#{Time.now} – #{Time.now}**"
-    "```\nDate #{"\s" * 35} Activity            Event ID\n\n" + @events.collect{ |e| "#{format_event(e.from.in_time_zone(@timezone))} – #{format_event(e.to.in_time_zone(@timezone))}       #{e.activity}   <#{e.id}>" }.join("\n\n") + "\n\n\n(All times are displayed in #{@timezone} time.)\n```"
-  end
+  alias_method :inspect, :to_s
 
-  private
-
-  def format_event(event)
-    if Time === event
-      return event.strftime("%-d–%-m–%y %H:%M")
-    elsif WeekTime === event
-      return event.to_s
-    end
+  def to_embed(include_id = false)
+    ScheduleFormatter.new(self).get_embed_from_schedule(include_id)
   end
 
 end

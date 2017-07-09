@@ -1,3 +1,5 @@
+require 'shellwords'
+
 module Emote
   ALL = File.read('assets/discord_emojis.txt').split.collect(&:to_sym)
 
@@ -33,6 +35,11 @@ module Emote
 
   def self.get(name)
     return ":#{name}:" if ALL.include?(name.to_sym)
+  end
+
+  # Remove emotes from string, useful for special markup formatting
+  def self.remove_emotes(str)
+    return str.gsub(Regexp.new(":(#{ALL.collect{|e| e.to_s.shellescape }.join('|')}):"), '')
   end
 
   private

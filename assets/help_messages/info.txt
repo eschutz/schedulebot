@@ -4,11 +4,11 @@ __Execute each command by itself to display in-depth help.__
 
 Commands:
 
-`.info`
+`&info`
       Display this help dialog.
 
-`.where` **[username]**
+`&where` **[username]**
       Find out what a user is currently doing.
 
-`.schedule` **[DAY TIME "message" | from DD/MM/YY hh:mm to DD/MM/YY hh:mm {activity} | {preset}]**
-      Set your schedule for the specified day/time. This will be displayed to other users when they query your username with `.where`.
+`&schedule` **[from {date} {time} to {date} {time} {activity}]**
+      Set your schedule for the specified day/time. This will be displayed to other users when they query your username with `&where`.

@@ -1,1 +1,1 @@
-{"name":"Office","events":[{"from":"Monday 9","to":"Monday 17"},{"from":"Tuesday 9","to":"Tuesday 17"},{"from":"Wednesday 9","to":"Wednesday 17"},{"from":"Thursday 9","to":"Thursday 17"},{"from":"Friday 9","to":"Friday 17"}],"activity":"at work"}
+{"name":"Office","description":"At work every weekday from 9am to 5pm.","events":[{"from":"Monday 9","to":"Monday 17"},{"from":"Tuesday 9","to":"Tuesday 17"},{"from":"Wednesday 9","to":"Wednesday 17"},{"from":"Thursday 9","to":"Thursday 17"},{"from":"Friday 9","to":"Friday 17"}],"activity":"at work :computer:"}
