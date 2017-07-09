@@ -1,1 +1,1 @@
-web: ruby schedule_bot.rb
+worker: bundle exec ruby schedule_bot.rb
