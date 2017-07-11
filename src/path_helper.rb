@@ -1,5 +1,5 @@
 module PathHelper
-  SCHEDULE_BOT_DIR = "#{ENV['HOME']}/Documents/Programs/Ruby/schedule_bot"
+  SCHEDULE_BOT_DIR = ENV['ENVIRONMENT'] == 'heroku' ? '/app' : "#{ENV['HOME']}/Documents/Programs/Ruby/schedule_bot"
 
   def self.get_asset(asset_path)
     File.read(get_asset_path(asset_path))
