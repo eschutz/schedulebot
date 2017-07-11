@@ -16,7 +16,7 @@ class ScheduleCommand
 
   def self.call(event, *args)
 
-    schedule_data_path = "data/user/where/#{event.user.distinct}"
+    schedule_data_path = PathHelper::get_data_path("user/where/#{event.user.distinct}")
 
     # Get symbol of first argument
     keyword = args.first.to_s.downcase.to_sym
