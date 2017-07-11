@@ -32,7 +32,7 @@ class Schedule
                 }
     NUMERIC = READABLE.invert
 
-    DAY_ABBREVIATIONS = WeekTime::READABLE.values.collect(&:upcase) + ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+    DAY_ABBREVIATIONS = READABLE.values.collect(&:upcase) + ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
     ABBREV_TO_COMPLETE = { "SUN" => "Sunday",
                            "MON" => "Monday",
@@ -78,7 +78,7 @@ class Schedule
     def in_time_zone(tz)
 
       tz_offset = Schedule::Offset.new(Time.now.in_time_zone(tz))
-      utc_offset = Schedule::Offset.new(Time.now.in_time_zone(TIMEZONE_ABBREVIATION_NAMES[@timezone]), true)
+      utc_offset = Schedule::Offset.new(TIMEZONE_ABBREVIATION_NAMES[@timezone] ? Time.now.in_time_zone(TIMEZONE_ABBREVIATION_NAMES[@timezone]) : @timezone, true)
 
       offset = utc_offset
       minute = @minute

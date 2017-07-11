@@ -99,7 +99,13 @@ class ScheduleCommand
           event << ":poop: Activity too long! The activity must be #{Schedule::Event::MAX_ACTIVITY_LENGTH} or fewer."
         else
           begin
-            weekly_event = Schedule::WeeklyEvent.new(Schedule::WeekTime.parse("#{args[1]} #{args[2]} #{Schedule::Offset.new(Time.now.in_time_zone(schedule.timezone)).to_s}"), Schedule::WeekTime.parse("#{args[4]} #{args[5]} #{Schedule::Offset.new(Time.now.in_time_zone(schedule.timezone)).to_s}"), args[6..(args.length - 1)].join(' '))
+
+            weekly_event = Schedule::WeeklyEvent.new(
+              Schedule::WeekTime.parse("#{args[1]} #{args[2]} #{Schedule::Offset.new(Time.now.in_time_zone(schedule.timezone)).to_s}"),
+              Schedule::WeekTime.parse("#{args[4]} #{args[5]} #{Schedule::Offset.new(Time.now.in_time_zone(schedule.timezone)).to_s}"),
+              args[6..(args.length - 1)].join(' ')
+            )
+
           rescue ArgumentError => e
             puts "ArgumentError:".red + " #{e.message}\n" + "BACKTRACE:".yellow + "\n#{e.backtrace.join("\n")}\n\n"
             return personal_help(event.user.username)

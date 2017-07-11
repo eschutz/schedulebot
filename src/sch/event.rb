@@ -23,7 +23,7 @@ class Schedule
       @to = to.getutc
       @activity = activity
       raise ArgumentError, "activity length exceeds max length of #{MAX_ACTIVITY_LENGTH}" if @activity.length > MAX_ACTIVITY_LENGTH
-      @id = id || SecureRandom.hex[0..5] # ID is first five characters of generate hash
+      @id = id || SecureRandom.hex[0..5] # ID is first five characters of generated hash
     end
 
     def on?(timezone="UTC")
