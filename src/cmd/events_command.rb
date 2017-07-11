@@ -49,7 +49,7 @@ class EventsCommand
 
       # Arguments of the form "from dd/mm/yy hh:mm to dd/mm/yy hh:mm activity"
       begin
-        event_args = {from: Time.parse("#{parse_date(args[1])} #{parse_time(args[2])} #{schedule.timezone}"), to: Time.parse("#{parse_date(args[4])} #{parse_time(args[5])} #{schedule.timezone}"), activity: args[6..(args.length - 1)].join(' ')}
+        event_args = {from: Time.parse("#{parse_date(args[1], schedule.timezone)} #{parse_time(args[2], schedule.timezone)} #{schedule.timezone}"), to: Time.parse("#{parse_date(args[4], schedule.timezone)} #{parse_time(args[5], schedule.timezone)} #{schedule.timezone}"), activity: args[6..(args.length - 1)].join(' ')}
       rescue ArgumentError => e
         puts "ArgumentError:".red + " #{e.message}\n" + "BACKTRACE:".yellow + "\n#{e.backtrace.join("\n")}\n\n"
         return personal_help(event.user.username)

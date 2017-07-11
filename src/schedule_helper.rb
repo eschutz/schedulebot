@@ -18,24 +18,24 @@ module ScheduleHelper
     return schedule
   end
 
-  def parse_date(date)
+  def parse_date(date, timezone)
     parsed_date = date.split(/\/|\-/).reverse.join('-')
 
     case date
     when "today"
-      parsed_date = Time.now.strftime("%F")
+      parsed_date = Time.now.in_time_zone(timezone).strftime("%F")
     when "tomorrow"
-      parsed_date = (Time.now + 86400).strftime("%F")
+      parsed_date = (Time.now + 86400).in_time_zone(timezone).strftime("%F")
     end
 
     return parsed_date
   end
 
-  def parse_time(time)
+  def parse_time(time, timezone)
     parsed_time = time
     case parsed_time
     when "now"
-      parsed_time = Time.now.strftime("%H:%M")
+      parsed_time = Time.now.in_time_zone(timezone).strftime("%H:%M")
     end
 
     return parsed_time
