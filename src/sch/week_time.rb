@@ -1,5 +1,6 @@
 require 'active_support/core_ext/time'
 require_relative 'timezone'
+require_relative 'offset'
 
 class Schedule
 
@@ -76,8 +77,8 @@ class Schedule
     # Works the same way as Time#in_time_zone
     def in_time_zone(tz)
 
-      tz_offset = Offset.new(Time.now.in_time_zone(tz))
-      utc_offset = Offset.new(Time.now.in_time_zone(TIMEZONE_ABBREVIATION_NAMES[@timezone]), true)
+      tz_offset = Schedule::Offset.new(Time.now.in_time_zone(tz))
+      utc_offset = Schedule::Offset.new(Time.now.in_time_zone(TIMEZONE_ABBREVIATION_NAMES[@timezone]), true)
 
       offset = utc_offset
       minute = @minute
@@ -186,8 +187,8 @@ class Schedule
           throw :unable_to_parse, :err
         end
 
-        if TIMEZONE_ABBREVIATION_NAMES.include?(args[2]) || TimeZone::TIMEZONES.values.include?(args[2])
-          tz = args[2]
+        if TIMEZONE_ABBREVIATION_NAMES.include?(args[2]) || args[2].match?(/^[+|-]\d\d\d\d$/) # Matches ±hh:mm timezone format
+          tz = args[2].to_s
         else
           throw :unable_to_parse, :err
         end
@@ -205,39 +206,6 @@ class Schedule
     end
 
     private
-
-    class Offset
-
-      def initialize(time, negative = false)
-        offset = time.to_s.split.last # Will return a value like +1030, -0200
-        @sign = offset[0]
-
-        if negative
-          if @sign == '-'
-            @sign = '+'
-          elsif @sign == '+'
-            @sign = '-'
-          end
-        end
-
-        @hour = offset[1..2]
-        @minute = offset[3..4]
-      end
-
-      # Return the offsets with the signs included
-      def hour
-        return "#{@sign}#{@hour}".to_i
-      end
-
-      def minute
-        return "#{@sign}#{@minute}".to_i
-      end
-
-      def to_s
-        return "#{@sign}#{@hour}#{@minute}"
-      end
-
-    end
 
   end
 

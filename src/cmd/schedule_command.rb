@@ -49,7 +49,7 @@ class ScheduleCommand
 
       # Arguments of the form "from dd/mm/yy hh:mm to dd/mm/yy hh:mm activity"
       begin
-        event_args = {from: Time.parse("#{parse_date(args[1])} #{parse_time(args[2])} #{schedule.timezone}"), to: Time.parse("#{parse_date(args[4])} #{parse_time(args[5])} #{schedule.timezone}"), activity: args[6..(args.length - 1)].join(' ')}
+        event_args = {from: Time.parse("#{parse_date(args[1])} #{parse_time(args[2])} #{Schedule::Offset.new(Time.now.in_time_zone(schedule.timezone)).to_s}"), to: Time.parse("#{parse_date(args[4])} #{parse_time(args[5])} #{Schedule::Offset.new(Time.now.in_time_zone(schedule.timezone)).to_s}"), activity: args[6..(args.length - 1)].join(' ')}
       rescue ArgumentError => e
         puts "ArgumentError:".red + " #{e.message}\n" + "BACKTRACE:".yellow + "\n#{e.backtrace.join("\n")}\n\n"
         return personal_help(event.user.username)
@@ -98,7 +98,7 @@ class ScheduleCommand
           event << ":poop: Activity too long! The activity must be #{Schedule::Event::MAX_ACTIVITY_LENGTH} or fewer."
         else
           begin
-            weekly_event = Schedule::WeeklyEvent.new(Schedule::WeekTime.parse("#{args[1]} #{args[2]} #{schedule.timezone}"), Schedule::WeekTime.parse("#{args[4]} #{args[5]} #{schedule.timezone}"), args[6])
+            weekly_event = Schedule::WeeklyEvent.new(Schedule::WeekTime.parse("#{args[1]} #{args[2]} #{Schedule::Offset.new(Time.now.in_time_zone(schedule.timezone)).to_s}"), Schedule::WeekTime.parse("#{args[4]} #{args[5]} #{Schedule::Offset.new(Time.now.in_time_zone(schedule.timezone)).to_s}"), args[6..(args.length - 1)].join(' '))
           rescue ArgumentError => e
             puts "ArgumentError:".red + " #{e.message}\n" + "BACKTRACE:".yellow + "\n#{e.backtrace.join("\n")}\n\n"
             return personal_help(event.user.username)
@@ -114,9 +114,9 @@ class ScheduleCommand
     # **** 'Preset' keyword handler ****
     when :preset
       if args[1] == nil
-        event << ":poop: `schedule`: __No preset specified!__ To view presets, use `.presets`"
+        event << ":poop: `schedule`: __No preset specified!__ To view presets, use `&presets`"
       elsif !(Schedule::Preset::presets.collect{ |pre| pre[:name].downcase.to_sym }.include?(args[1].to_s.downcase.to_sym))
-        event << ":poop: `schedule`: __Preset not found!__ To view presets, use `.presets`"
+        event << ":poop: `schedule`: __Preset not found!__ To view presets, use `&presets`"
       elsif !(['enable', 'disable'].include?(args[2].to_s.downcase))
         event << ":poop: `schedule`: __Invalid setting specified!__"
       else

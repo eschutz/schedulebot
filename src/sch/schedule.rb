@@ -1,6 +1,7 @@
 require_relative 'event'
 require_relative 'weekly_event'
 require_relative 'preset'
+require_relative 'offset'
 require_relative '../comm/emote'
 require_relative '../schedule_formatter'
 
