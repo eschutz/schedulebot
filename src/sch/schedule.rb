@@ -64,6 +64,7 @@ class Schedule
 
   # Save a schedule to file
   def write(path)
+    FileUtils::mkdir_p(File.dirname(path))
     File.open(path, 'w') do |f|
       f.write(
         {
