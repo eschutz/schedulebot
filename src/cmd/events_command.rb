@@ -1,5 +1,6 @@
 require 'json'
 require_relative '../command'
+require_relative '../path_helper'
 require_relative '../sch/server_event'
 
 # UNFINISHED - UNUSED
@@ -18,7 +19,7 @@ class EventsCommand
   }
 
   def self.call(event, *args)
-    schedule_data_path = "data/server/#{event.server.id}"
+    schedule_data_path = PathHelper::get_data_path("server/#{event.server.id}")
 
     schedule = read_schedule(schedule_data_path)
 
@@ -98,8 +99,8 @@ class EventsCommand
       write_schedule.merge(event.serialise)
     end
 
-    File.open(path, 'r') do |f|
-      f.puts(
+    File.open(path, 'w') do |f|
+      f.write(
         JSON.stringify( {
           server: server_id,
           events: write_schedule

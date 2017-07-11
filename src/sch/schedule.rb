@@ -65,7 +65,7 @@ class Schedule
   # Save a schedule to file
   def write(path)
     File.open(path, 'w') do |f|
-      f.puts(
+      f.write(
         {
           user: @user,
           events: @events.collect{|e| e.serialise},

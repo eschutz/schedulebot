@@ -1,5 +1,6 @@
 require_relative '../command'
 require_relative '../schedule_helper'
+require_relative '../path_helper'
 require_relative '../sch/schedule'
 require_relative '../comm/emote'
 
