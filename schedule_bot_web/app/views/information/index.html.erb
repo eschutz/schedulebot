@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <% @title = "Home" %>
+  </head>
+  <body>
+    <div class="row">
+      <div class="col-md-2">
+        <div class="table-background">
+
+          <div class="features-table-wrapper table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <td>
+                    <strong>Commands</strong>
+                  </td>
+                </tr>
+              </thead>
+              <tbody class="table-link" id="featuresTable">
+                <tr>
+                  <td href="schedule">
+                    <a class="cursor-pointer">
+                      <code>schedule</code>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td href="where" class="cursor-pointer">
+                      <code>where</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td href="presets" class="cursor-pointer">
+                      <code>presets</code>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-10">
+        <div class="info-body" id="infoBox">
+          <h1 class="page-header">What is ScheduleBot?</h1>
+          <p class="lead">
+            <small>
+                ScheduleBot is a Discord bot designed to help you organise your schedule, and to let others know what you're doing.
+                With ScheduleBot you can create one-off events, a weekly routine, or a common preset schedule, with more features planned!
+                <br>
+                See what your friends have set on their schedule, and <span class="text-primary">soon: create and view server-wide events</span>.
+            </small>
+          </p>
+        </div>
+      </div>
+    </div>
+      <div class="col-md-3">
+      </div>
+      <div class="col-md-6">
+        <div class="row carousel-container">
+          <div id="carouselDisplay" class="carousel slide carousel-styling" data-ride="carousel">
+            <ol class="carousel-indicators">
+              <li data-target="#carouselDisplay" data-slide-to="0" class="active"></li>
+              <li data-target="#carouselDisplay" data-slide-to="1"></li>
+              <li data-target="#carouselDisplay" data-slide-to="2"></li>
+            </ol>
+
+            <div class="carousel-inner carousel-styling">
+              <div class="item active">
+                <%= image_tag("from.png", alt: "Create one-time events.") %>
+              </div>
+
+              <div class="item">
+                <%= image_tag("weekly.png", alt: "Create routine events.") %>
+              </div>
+
+              <div class="item">
+                <%= image_tag("where.png", alt: "Find out what another user is doing.") %>
+              </div>
+            </div>
+
+            <a href="#carouselDisplay" class="left carousel-control carousel-nav-left" data-slide="prev">
+              <span class="glyphicon glyphicon-chevron-left"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a href="#carouselDisplay" class="right carousel-control carousel-nav-right" data-slide="next">
+              <span class="glyphicon glyphicon-chevron-right"></span>
+              <span class="sr-only">Next</span>
+            </a>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+      </div>
+
+  </body>
+</html>

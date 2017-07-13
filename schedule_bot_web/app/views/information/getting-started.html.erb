@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <% @title = "Getting Started" %>
+  </head>
+  <body>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="center-block getting-started-section">
+          <h1 class="page-header">
+            Getting Started
+            <span style="float:right; outline: none; font-size: 16px" class="glyphicon glyphicon-question-sign" data-toggle="popover" title="Tips" data-content="<code>Text like this</code> indicates the parameter is 'variable' – instead of being part of the command, it is text that you enter yourself.<br><strong>[Square brackets]</strong> indicate that the parameter is optional." data-html="true" data-placement="left" data-trigger="focus" tabindex="0"></span>
+          </h1>
+          <h3><small>Before using ScheduleBot, there are a few things necessary to set up; then you'll be on your way!</small></h3>
+          <h4 class="subtitle">Setting your timezone</h4>
+          <p>To start, you'll have to set your timezone. By default this is set to UTC (Coordinated Universal Time), changed like so:</p>
+          <div class="well well-sm">
+            schedule timezone [<code>city_name</code>]
+          </div>
+          <p>Replace <code>city_name</code> with the name of your city and ScheduleBot will automatically detect your timezone. Running <em>schedule timezone</em> by itself will show the timezone setting of your schedule.</p>
+          <br>
+          <h4 class="subtitle">Setting your schedule</h4>
+          <p>ScheduleBot offers a few different ways to set your schedule. You can set one-time events like this:</p>
+          <div class="well well-sm">
+            schedule from <code>starting_date starting_time</code> to <code>finishing_date finishing_time activity</code>
+          </div>
+          <p><code>starting</code>/<code>finishing</code> <code>date</code>/<code>time</code> specify the respective starting or finishing moments in time for your event. <code>activity</code> is a brief sentence describing your activity. For example:</p>
+          <div class="well well-sm">
+            schedule from 9/7/17 8am to 13/7/17 9pm on a business trip
+          </div>
+          <br>
+          <p>Regular (weekly) events are set similiarly:</p>
+          <div class="well well-sm">
+            schedule weekly <code>starting_day starting_time</code> to <code>finishing_day finishing_time activity</code>
+          </div>
+          <p>The <code>starting</code> and <code>finishing</code> days can be given as an abbreviated (Mon, Tue, Wed, etc.) or full day of the week.</p>
+          <br>
+          <h4 class="subtitle">Presets</h4>
+          <p>Presets are sets of common activities that can be added to your schedule. Some presets that are available are office hours ('office', 9am-5pm weekdays) and school hours ('school', 9am-5pm weekdays). Presets can be added to/removed from your schedule using:</p>
+          <div class="well well-sm">
+            schedule preset <code>preset_name</code> (DIS/EN)ABLE
+          </div>
+          <br>
+          <h4 class="subtitle">Removing events</h4>
+          <p>Each event has a corresponding unique 6-character ID. These are used to identify them when removing events:</p>
+          <div class="well well-sm">
+            schedule remove <code>event_ID</code> [YES]
+          </div>
+          <p>To remove all events on your schedule:</p>
+          <div class="well well-sm">
+            schedule clear [YES]
+          </div>
+          <br>
+          <h4 class="subtitle">Where?</h4>
+          <p>And finally, you can find out where another user is according to their schedule using <em>where</em>:</p>
+          <div class="well well-sm">
+            where <code>username#1234</code>
+          </div>
+          <p>The <code>username</code> parameter must be the user's <strong>distinct</strong> name – their name with the number afterwards (<em>username#1234</em>). An easy way to do this is to @mention them, and then delete the '@' character.</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

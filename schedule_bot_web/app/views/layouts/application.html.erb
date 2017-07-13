@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= "ScheduleBot | " + @title %></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= favicon_link_tag 'icon.png' %>
+
+  </head>
+
+  <body>
+
+    <div class="background-container">
+        <img src="<%= session[:background_url].html_safe %>">
+        <div class="overlay"></div>
+    </div>
+
+    <!-- Main body -->
+    <nav class="navbar navbar-fixed-top title-banner">
+    <!-- Title banner -->
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <%= image_tag("icon.png", class: "navbar-left img-responsive icon-wrapper") %>
+          <%= link_to("ScheduleBot", "/", class: "navbar-brand title") %>
+          <button type="button" class="btn btn-default invite-button" title="Invite ScheduleBot to your server!" onclick="location.href='https://discordapp.com/oauth2/authorize?&client_id=294809301040496641&scope=bot&permissions=0'">
+            Invite
+          </button>
+        </div>
+          <ul class="nav navbar-nav navbar-font">
+            <li class="navbar-item">
+              <a class="button-link" href="/getting-started">
+              <button type="button" id="gettingStarted" class="btn btn-default docs-button" data-toggle="tooltip" title="New here?" data-trigger="manual" data-placement="bottom">
+                  Getting Started
+              </button>
+              </a>
+              <button type="button" class="btn btn-default contact-button mobile-contact-button" data-toggle="tooltip" data-placement="left" data-container="body" title="Contact me on Discord: Ohjoyimbored#1924">
+                Contact
+              </button>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-font contact-container">
+            <li class="navbar-item">
+              <button type="button" class="btn btn-default contact-button" data-toggle="tooltip" data-placement="left" data-container="body" title="Contact me on Discord: Ohjoyimbored#1924">
+                Contact
+              </button>
+            </li>
+          </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid" style="margin-left: 0; margin-right: 0; margin-top: 127px">
+      <%= yield %>
+    </div>
+
+    <div class="col-md-4 image-credit">
+      <a onclick="window.open('<%= @bg_user_url %>')" alt="Background images supplied by Pixabay">
+        <img style="max-width: 100px" src="https://pixabay.com/static/img/logo.png">
+      </a>
+    </div>
+
+    <div class="col-md-4 footer-component text-muted">
+      &copy; 2017 ScheduleBot
+    </div>
+
+    <div class="col-md-1"></div>
+    <div class="col-md-3 footer-component new-background">
+      <span class="text">Don't like this background?</span>
+      <br>
+      <a href="?new_background=1"><span class="text">Request a new one.</span><span class="glyphicon glyphicon-picture mobile"></span></a>
+
+    </div>
+
+  </body>
+</html>

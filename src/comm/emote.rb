@@ -45,7 +45,7 @@ module Emote
   private
 
   TIMEZONE_EMOTES = {
-    ["Europe/Dublin", "Europe/London"] => :flag_gb,
+    ["Europe/London"] => :flag_gb,
     ["Europe/Paris"] => :flag_fr,
     ["Europe/Berlin"] => :flag_de,
     ["Europe/Moscow", "Europe/Kaliningrad", "Europe/Volgograd", "Europe/Samara", "Asia/Yakutsk", "Asia/Krasnoyarsk", "Asia/Yekaterinburg", "Asia/Irkutsk", "Asia/Vladivostok", "Asia/Srednekolymsk", "Asia/Kamchatka"] => :flag_ru,

@@ -5,7 +5,7 @@ class WhereCommand
   extend Command
   extend ScheduleHelper
 
-  CMD_NAME = :where
+  CMD_NAME = [:where, :whereis, :where?]
   HELP_MSG = File.read('assets/help_messages/where_help.txt')
   OPTIONS = {
     description: ':mag_right: Find out where another use is.',
