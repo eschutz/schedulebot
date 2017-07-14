@@ -205,8 +205,6 @@ class Schedule
 
     end
 
-    private
-
   end
 
 end

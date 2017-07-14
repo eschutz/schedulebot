@@ -41,4 +41,8 @@ module ScheduleHelper
     return parsed_time
   end
 
+  def get_offset(timezone)
+    return Time.now.in_time_zone(timezone).to_s.split.last
+  end
+
 end

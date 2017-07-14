@@ -1,6 +1,7 @@
 require 'json'
 require_relative 'weekly_event'
 require_relative '../path_helper'
+require_relative '../schedule_helper'
 
 class Schedule
 
@@ -73,17 +74,13 @@ class Schedule
       end
 
       AbstractWeekTime = Struct.new(:day, :time) do
-        def initialize(day, time)
-          @day = day
-          @time = time
-        end
 
         def to_week_time(timezone)
-          return WeekTime.parse("#{@day} #{@time} #{timezone}")
+          return WeekTime.parse("#{day} #{time} #{Time.now.in_time_zone(timezone).to_s.split.last}") # Gets UTC offset as string - TODO: Replace with method
         end
 
         def to_s
-          return "#{@day} #{@time}"
+          return "#{day} #{time}"
         end
       end
 
