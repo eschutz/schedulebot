@@ -17,7 +17,7 @@ class ScheduleCommand
 
   def self.call(event, *args)
 
-    schedule_data_path = PathHelper::get_data_path("user/where/#{event.user.distinct}")
+    # schedule_data_path = PathHelper::get_data_path("user/where/#{event.user.distinct}")
 
     # Get symbol of first argument
     keyword = args.first.to_s.downcase.to_sym
@@ -61,7 +61,7 @@ class ScheduleCommand
       else
         sch_event = Schedule::Event.new(event_args[:from], event_args[:to], event_args[:activity])
         schedule.add_event(sch_event)
-        schedule.write(schedule_data_path)
+        schedule.write
 
         event << "Your schedule has been set!\n" + sch_event.print_tz(schedule.timezone)
       end
@@ -112,7 +112,7 @@ class ScheduleCommand
           end
 
           schedule.add_event(weekly_event)
-          schedule.write(schedule_data_path)
+          schedule.write
 
           event << ":calendar: Your schedule has been set! Added a new weekly event:\n" + weekly_event.print_tz(schedule.timezone)
         end
@@ -130,12 +130,11 @@ class ScheduleCommand
         preset = Schedule::Preset::get_preset(args[1])
         if args[2].downcase == 'enable'
           schedule.add_preset(preset)
-          schedule.write(schedule_data_path)
+          schedule.write
           event << ":calendar: #{preset.name.capitalize} preset was added to your schedule! Use `&schedule view` to view your schedule."
         else
           if schedule.enabled_presets.include?(preset.name)
             schedule.remove_preset(preset)
-            schedule.write(schedule_data_path)
             event << "#{preset.name.capitalize} preset was removed from your schedule!"
           else
             event << "You don't have that preset enabled! To enable a preset, use `&schedule preset {preset} ENABLE|DISABLE`"
@@ -157,8 +156,7 @@ class ScheduleCommand
     # **** Clear your schedule completely ****
     when :clear
       if args[1].to_s.upcase == 'YES'
-        schedule.events.clear
-        schedule.write(schedule_data_path)
+        schedule.clear
         event << ":fire: Your schedule was cleared!"
       else
         event << "Are you sure you want to **completely** clear your schedule? __This action is irreversible.__\nType `&schedule clear YES` to continue."
@@ -174,7 +172,6 @@ class ScheduleCommand
         if event_ids.include?(id)
           if args[2].to_s.upcase == 'YES'
             schedule.remove_event(id)
-            schedule.write(schedule_data_path)
             event << ":fire: The event with ID __#{id}__ was removed."
           else
             event << "Are you sure you want to remove this event? __This action is irreversible.__\nType `&schedule remove #{id} YES` to continue"
@@ -195,7 +192,6 @@ class ScheduleCommand
       timezone = Schedule::Event.get_timezone(tz)
       if timezone
         schedule.timezone = timezone
-        schedule.write(schedule_data_path)
         event << "#{Emote::get_flag(timezone)} Your schedule will now be displayed in the #{schedule.timezone} timezone."
       else
         event << "Cannot find a timezone for that city!"

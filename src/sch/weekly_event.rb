@@ -57,9 +57,14 @@ class Schedule
       }
     end
 
-    def self.deserialise(data)
-      json = data.values.first
-      return WeeklyEvent.new(WeekTime.parse(json["from"]), WeekTime.parse(json["to"]), json["activity"], data.keys[0])
+    def self.deserialise(data) # data is a hash containing Type, StartingTime, FinishingTime, Activity, ID
+      raise ArgumentError, "invalid event data array: #{data}" unless data.length == 5
+
+      return WeeklyEvent.new(WeekTime.parse(data['startingtime']), WeekTime.parse(data['finishingtime']), data['activity'], data['id'])
+
+      # Old method
+      # json = data.values.first
+      # return WeeklyEvent.new(WeekTime.parse(json["from"]), WeekTime.parse(json["to"]), json["activity"], data.keys[0])
     end
 
   end

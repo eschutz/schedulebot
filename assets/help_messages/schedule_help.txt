@@ -32,4 +32,4 @@ __Set the timezone in which schedules are displayed__ (This affects only the sch
 
 `&schedule preset office ENABLE`       #=>   *__#{username} is at work right now :computer:__*
 
-`&schedule remove a0b1c2d3e4f5g6h7i8j9k10l11m12n13`        #=> [Removes event with the given id]
+`&schedule remove a0b1c2`        #=> [Removes event with the given id]

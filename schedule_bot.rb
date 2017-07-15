@@ -3,6 +3,13 @@
 require 'discordrb'
 require 'time'
 require 'colorize'
+require 'pg'
+
+# PostgreSQL initalisation via pg
+# Global variable for accessibility in all files
+# Needs to be initialised before files are required to ensure that statements
+# can be prepared and other initialisation processes etc.
+$postgres = PG.connect(ENV['DATABASE_URL'], sslmode: ENV['ENVIRONMENT'] == 'heroku' ? 'require' : 'allow')
 
 Dir[Dir.pwd + '/src/cmd/*'].each do |file|
   require file unless file.include?('events_command')

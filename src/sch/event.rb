@@ -54,9 +54,14 @@ class Schedule
       }
     end
 
-    def self.deserialise(data)
-      json = data.values.first
-      return Event.new(Time.parse(json["from"]), Time.parse(json["to"]), json["activity"], data.keys[0])
+    def self.deserialise(data) # data is a hash containing Type, StartingTime, FinishingTime, Activity, ID
+      raise ArgumentError, "invalid event data array: #{data}" unless data.length == 5
+
+      return Event.new(Time.parse(data['startingtime']), Time.parse(data['finishingtime']), data['activity'], data['id'])
+
+      # Old method - with JSON on files
+      # json = data.values.first
+      # return Event.new(Time.parse(json["from"]), Time.parse(json["to"]), json["activity"], data.keys[0])
     end
 
     def self.get_timezone(city)

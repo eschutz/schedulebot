@@ -5,17 +5,17 @@ require_relative 'path_helper'
 module ScheduleHelper
 
   def get_schedule(user_distinct)
-    schedule_data_path = PathHelper::get_data_path("user/where/#{user_distinct}")
-    if File.exists?(schedule_data_path)
-      schedule = Schedule.load_schedule(schedule_data_path)
-      if schedule == false
-        schedule = Schedule.new(user_distinct)
-      end
-    else
-      schedule = Schedule.new(user_distinct)
-    end
-
-    return schedule
+    # schedule_data_path = PathHelper::get_data_path("user/where/#{user_distinct}")
+    # if File.exists?(schedule_data_path)
+    #   schedule = Schedule.load_schedule(schedule_data_path)
+    #   if schedule == false
+    #     schedule = Schedule.new(user_distinct)
+    #   end
+    # else
+    #   schedule = Schedule.new(user_distinct)
+    # end
+    return Schedule.load_schedule(user_distinct)
+    
   end
 
   def parse_date(date, timezone)
