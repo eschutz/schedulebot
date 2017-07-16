@@ -1,0 +1,3 @@
+#!/bin/bash
+cd schedule_bot_web
+bundle exec puma -C config/puma.rb
