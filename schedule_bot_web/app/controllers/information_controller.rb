@@ -31,13 +31,19 @@ class InformationController < ApplicationController
 
     if params[:new_background] == '1'
       session[:background_url] = nil
+      session[:bg_user_url] = nil
     end
 
     request_time = Time.now
     # Rate limit of 5000 requests per hour = 3600 seconds / 5000 requests
     if ((request_time - @@last_img_request) > (60**2)/5000.0) || !@@background_image
       @@last_img_request = request_time
-      bg_request = @@pixabay_client.photos(q: 'landscape', image_type: 'photo', category: 'nature', orientation: 'horizontal', editors_choice: true, order: 'latest')['hits']
+      begin
+        bg_request = @@pixabay_client.photos(q: 'landscape', image_type: 'photo', category: 'nature', orientation: 'horizontal', editors_choice: true, order: 'latest')['hits']
+      rescue SocketError => e
+        puts e, e.message
+      end
+
       if bg_request
         bg_hit = bg_request[rand(0..bg_request.length)]
         if bg_hit
@@ -48,6 +54,7 @@ class InformationController < ApplicationController
     end
 
     session[:background_url] ||= @@background_image
+    session[:bg_user_url] ||= @@bg_user_url
 
   end
 

@@ -1,0 +1,55 @@
+{
+  "user": "Ohjoyimbored#1924",
+  "events": [{
+    "020120": {
+      "type": "WeeklyEvent",
+      "from": "Monday 09:30:00 +0000",
+      "to": "Friday 10:30:00 +0000",
+      "activity": "need a weekly event"
+    }
+  }, {
+    "237087": {
+      "type": "Event",
+      "from": "2017-07-14 01:38:00 UTC",
+      "to": "2017-07-15 01:38:00 UTC",
+      "activity": "testing event for json to sql"
+    }
+  }, {
+    "541d94": {
+      "type": "WeeklyEvent",
+      "from": "Sunday 22:30:00 +0000",
+      "to": "Monday 06:00:00 +0000",
+      "activity": "at school :books:"
+    }
+  }, {
+    "371549": {
+      "type": "WeeklyEvent",
+      "from": "Monday 22:30:00 +0000",
+      "to": "Tuesday 06:00:00 +0000",
+      "activity": "at school :books:"
+    }
+  }, {
+    "e0bdc1": {
+      "type": "WeeklyEvent",
+      "from": "Tuesday 22:30:00 +0000",
+      "to": "Wednesday 06:00:00 +0000",
+      "activity": "at school :books:"
+    }
+  }, {
+    "4a3e85": {
+      "type": "WeeklyEvent",
+      "from": "Wednesday 22:30:00 +0000",
+      "to": "Thursday 06:00:00 +0000",
+      "activity": "at school :books:"
+    }
+  }, {
+    "a1c250": {
+      "type": "WeeklyEvent",
+      "from": "Thursday 22:30:00 +0000",
+      "to": "Friday 06:00:00 +0000",
+      "activity": "at school :books:"
+    }
+  }],
+  "timezone": "Australia/Adelaide",
+  "enabled_presets": ["School"]
+}

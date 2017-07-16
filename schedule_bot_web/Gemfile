@@ -38,6 +38,9 @@ gem 'less-rails'
 # Use Pixabay for pretty backgrounds
 gem 'pixabay-api', require: 'pixabay'
 
+# Allow static pages to use the asset pipeline
+gem 'non-stupid-digest-assets'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

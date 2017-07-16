@@ -31,6 +31,7 @@ class ScheduleBot
     add_command(ScheduleCommand)
     add_command(WhereCommand)
     add_command(PresetsCommand)
+    add_command(WelcomeCommand)
   end
 
   def log_exception(e)
@@ -42,7 +43,7 @@ class ScheduleBot
   def start
     begin
       @bot.run(:async)
-      @bot.game = '&info'
+      @bot.game = '&info | sch-bot.herokuapp.com'
       @bot.sync
     rescue Interrupt
       @bot.stop
