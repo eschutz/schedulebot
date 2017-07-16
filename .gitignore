@@ -1,1 +1,6 @@
 new_command
+.DS_Store
+schedule_bot_web/log/development.log
+schedule_bot_web/log/production.log
+schedule_bot_web/tmp/restart.txt
+schedule_bot_web/tmp/cache
