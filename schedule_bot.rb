@@ -59,7 +59,6 @@ class ScheduleBot
     end
   end
 
-
 end
 
 bot = ScheduleBot.new
