@@ -13,5 +13,6 @@ create table UserEvents.Events(
 
 create table UserEvents.UserData(
   UserDistinct text primary key not null,
-  Timezone text not null
+  Timezone text not null,
+  EnabledPresets text
 );

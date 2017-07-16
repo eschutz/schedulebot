@@ -1,4 +1,4 @@
 #!/bin/bash
 cd schedule_bot_web
-bundle install
+bundle install -j4
 bundle exec puma -C config/puma.rb
