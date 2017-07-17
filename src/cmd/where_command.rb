@@ -15,7 +15,7 @@ class WhereCommand
   def self.call(event, *args)
     username = args[0]
     members = event.channel.server.members
-    if members.collect(&:distinct).include?(username)
+    if members && members.collect(&:distinct).include?(username)
       queried_user = members.select{|m| m.distinct == username }[0]
 
       schedule = get_schedule(username)
