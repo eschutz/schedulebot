@@ -24,8 +24,8 @@ if $postgres
   $postgres.prepare('load_schedule', 'select Type, StartingTime, FinishingTime, Activity, ID from UserEvents.Events where "User"=$1')
   $postgres.prepare('get_timezone', 'select Timezone, EnabledPresets from UserEvents.UserData where UserDistinct=$1')
 else
-  puts "WARNING: No global postgres PG::Connection object available! Schedule#remove_event, Schedule#write, Schedule#clear, and Schedule#load_schedule will raise errors.".red
-  puts "If in REPL, please initialise a $postgres PG::Connection object and then run `load 'path/to/schedule.rb'.`".yellow
+   puts "WARNING: No global postgres PG::Connection object available! Schedule#remove_event, Schedule#write, Schedule#clear, and Schedule#load_schedule will raise errors.".red
+   puts "If in REPL, please initialise a $postgres PG::Connection object and then run `load 'path/to/schedule.rb'.`".yellow
 end
 
 
@@ -78,7 +78,8 @@ class Schedule
     $postgres.exec_prepared('remove_event', [id])
   end
 
-  def timezone=(tz)
+  def timezone=(time_zone)
+    tz = time_zone || 'UTC'
     @timezone = tz
     # Instead of using a prepared statement here, I had to instead
     # use PG::Connection#escape_string and string interpolation,

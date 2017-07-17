@@ -42,7 +42,7 @@ class ScheduleFormatter
     embed.colour = DEFAULT_EMBED_COLOUR
     embed.title = "#{@schedule.user}'s Schedule"
     embed.footer = Discordrb::Webhooks::EmbedFooter.new(text: "All times are displayed in #{@schedule.timezone} time.")
-    embed.url = 'sch-bot.herokuapp.com'
+    embed.url = 'http://sch-bot.herokuapp.com'
 
     events_list = ['']
     id_list = ['']

@@ -3,13 +3,16 @@ source 'https://rubygems.org'
 
 ruby '2.4.0'
 
-gem 'discordrb'
-gem 'colorize'
-gem 'json'
-gem 'activesupport'
-gem 'pg'
-gem 'nokogiri'
+# ScheduleBot dependencies
+gem 'discordrb', require: false
+gem 'colorize', require: false
+gem 'json', require: false
+gem 'activesupport', require: false
+gem 'pg', require: false
+gem 'nokogiri', require: false
 
+
+# Rails dependencies
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
