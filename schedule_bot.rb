@@ -52,8 +52,8 @@ end
 class ScheduleBot
   include Discordrb
 
-  TOKEN = "Mjk0ODA5MzAxMDQwNDk2NjQx.C7aiQA.HacES9iU9s4jRtoBq9Qh08sSXXI".freeze
-  CLIENT_ID = "294809301040496641".freeze
+  TOKEN = ENV['SCHEDULEBOT_TOKEN']
+  CLIENT_ID = ENV['SCHEDULEBOT_CLIENT_ID']
 
   def initialize
     @bot = Commands::CommandBot.new(token: TOKEN, client_id: CLIENT_ID, prefix: '&', command_doesnt_exist_message: File.read('assets/help_messages/info.txt'))
