@@ -19,7 +19,7 @@
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= favicon_link_tag 'icon.png' %>
+    <%= favicon_link_tag 'compressed/icon.png' %>
 
   </head>
 
@@ -35,7 +35,7 @@
     <!-- Title banner -->
       <div class="container-fluid">
         <div class="navbar-header">
-          <%= image_tag("icon.png", class: "navbar-left img-responsive icon-wrapper") %>
+          <%= image_tag("compressed/icon.png", class: "navbar-left img-responsive icon-wrapper") %>
           <%= link_to("ScheduleBot", "/", class: "navbar-brand title") %>
           <button type="button" class="btn btn-default invite-button" title="Invite ScheduleBot to your server!" onclick="location.href='https://discordapp.com/oauth2/authorize?&client_id=294809301040496641&scope=bot&permissions=0'">
             Invite
