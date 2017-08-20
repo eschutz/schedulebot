@@ -12,7 +12,7 @@ class ScheduleCommand
   HELP_MSG = File.read("assets/help_messages/schedule_help.txt")
   OPTIONS = {
     description: ':calendar: Set your schedule for others to see.',
-    usage: '`&schedule` **[from dd/mm/yy hh:mm to dd/mm/yy hh:mm {activity}]**'
+    usage: '`schedule` **[from dd/mm/yy hh:mm to dd/mm/yy hh:mm {activity}]**'
   }
 
   def self.call(event, *args)
